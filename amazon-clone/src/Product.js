@@ -10,11 +10,12 @@ import './Product.css';
                     <strong>25.25</strong>
                 </p>
                 <div className="product_rating">
-                    <p>*</p>
-                    <p>*</p>
-                    <p>*</p>
+                    <p>⭐</p>
                 </div>
-            </div>    
+            </div>   
+            <img src=""/>
+
+            <button> Add to Basket</button>
         </div>
     )
 }

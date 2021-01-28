@@ -13,20 +13,20 @@ import Product from './Product';
 
             <div className="home_row">
                 <Product />
+                <Product /> 
+            </div>
+
+            <div className="home_row">
                 <Product />
-                
+                <Product />
+                <Product />
             </div>
 
             <div className="home_row">
-                {/* Product */}
-                {/* Product */}
-                {/* Product */}
+                <Product />
+                {/* <Product /> */}
             </div>
-
-            <div className="home_row">
-                {/* Product */}
-            </div>
-            </div>
+           </div>
         </div>
     )
 }
