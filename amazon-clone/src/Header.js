@@ -21,7 +21,7 @@ import { useStateValue } from './StateProvider';
             </div>
 
             <div className="header_nav">
-
+                <Link to="/login">
                 <div className="header_option">
                     <span className="headre_optionLineOne">
                         Hello Guest 
@@ -30,6 +30,7 @@ import { useStateValue } from './StateProvider';
                         Sing In
                     </span>
                 </div>
+                </Link>
 
                 <div className="header_option">
                     <span className="headre_optionLineOne">
