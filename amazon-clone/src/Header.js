@@ -30,7 +30,7 @@ import {auth} from "./firebase";
                 <Link to={!user && "/login"}>
                 <div onClick={handleAuthentication} className="header_option">
                     <span className="headre_optionLineOne">
-                        Hello Guest 
+                        Hello {!user ? 'Guest' : user.email}
                     </span>
                     <span className="headre_optionLineTwo">{user ? 'Sing Out' : 'Sing In'}</span>
                 </div>
