@@ -7,6 +7,8 @@ import { CardElement, useStripe, useElements } from '@stripe/react-stripe-js';
 import CurrencyFormt from "react-currency-format"; 
 import { getBasketTotal } from './reducer';
 import axios from './axios';
+import { db } from './firebase';
+
 
 function Payment() {
     const [{basket, user }, dispatch ] = useStateValue();
@@ -22,32 +24,53 @@ function Payment() {
     const [clientSecret, setClientSecret] = useState(true);
 
     useEffect(() => {
+        // generate the special stripe secret which allows us to charge a customer
         const getClientSecret = async () => {
             const response = await axios({
                 method: 'post',
-                url: `/paymets/create?total=${getBasketTotal(basket) * 100}`
+                // Stripe expects the total in a currencies subunits
+                url: `/payments/create?total=${getBasketTotal(basket) * 100}`
             });
             setClientSecret(response.data.clientSecret)
         }
-        getClientSecret();
-    },[basket])
 
-    console.log('THE SECRETE IS >>>', clientSecret)
+        getClientSecret();
+    }, [basket])
+
+    console.log('THE SECRET IS >>>', clientSecret)
+    console.log('👱', user)
+
 
     const handleSubmite = async (event)  => {
-        event.preventDefault();
+        event.preventDefault(); 
         setProcessing(true);
 
         // const payload = await stripe
-        const payload = await stripe.confirmCardPayment(clientSecret,{
+        const payload = await stripe.confirmCardPayment(clientSecret, {
             payment_method: {
                 card: elements.getElement(CardElement)
             }
         }).then(({ paymentIntent }) => {
+            // paymentIntent = payment confirmation
+
+            db
+              .collection('users')
+              .doc(user?.uid)
+              .collection('orders')
+              .doc(paymentIntent.id)
+              .set({
+                  basket: basket,
+                  amount: paymentIntent.amount,
+                  created: paymentIntent.created
+              })
 
             setSucceeded(true);
             setError(null);
             setProcessing(false)
+
+            dispatch({
+                type: 'EMPTY_BASKET'
+            })
 
             history.replace('/orders')
         })
@@ -80,8 +103,8 @@ function Payment() {
                 </div>
 
                 <div className="payment_section">
-                    <div className="paymet_title">
-                        <h3>Review item and delivery</h3>
+                    <div className="payment_title">
+                        <h2>Review item and delivery</h2>
                     </div>
                     <div className="payment_items">
                         {basket.map(item => (
